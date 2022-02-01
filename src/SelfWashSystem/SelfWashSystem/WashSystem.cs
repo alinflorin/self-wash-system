@@ -15,5 +15,10 @@ namespace SelfWashSystem
             base(pumpControllers, configuration, paymentController, lcdController, keysController)
         {
         }
+
+        public override string GetAdditionalText()
+        {
+            return "C - add coin";
+        }
     }
 }

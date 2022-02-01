@@ -18,6 +18,9 @@ namespace SelfWashSystem.Abstractions.Interfaces
         private uint _availableSeconds;
         private Service _selectedService;
 
+        private bool _isRunning;
+        private Thread t;
+
         public AbstractWashSystem(IEnumerable<IPumpController> pumpControllers, Configuration configuration,
             IPaymentController paymentController, ILcdController lcdController, IKeysController keysController)
         {
@@ -28,10 +31,35 @@ namespace SelfWashSystem.Abstractions.Interfaces
             _keysController = keysController;
         }
 
+
+        public void Stop()
+        {
+            _isRunning = false;
+            t.Abort();
+        }
+
+        public void Start()
+        {
+            _isRunning = true;
+            t = new Thread(Run);
+            t.Start();
+        }
+
+        public abstract string GetAdditionalText();
+
         public void Run()
         {
             _lcdController.SetText("Welcome to " + _configuration.CompanyName);
-            while (true)
+            _lcdController.SetText("List of services:");
+            foreach (var service in _configuration.Services)
+            {
+                _lcdController.SetText(service.KeyNumber + " - " + service.Name);
+            }
+            _lcdController.SetText(_configuration.Services.Max(x => x.KeyNumber) + 1 + " - Stop");
+
+            _lcdController.SetText(GetAdditionalText());
+
+            while (_isRunning)
             {
                 var coinAddResult = _paymentController.ReadCoinAdded();
                 if (coinAddResult)

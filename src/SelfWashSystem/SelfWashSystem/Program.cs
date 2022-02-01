@@ -42,7 +42,7 @@ namespace SelfWashSystem
             ILcdController lcdController = new LcdController();
 
             var system = new WashSystem(pumpControllers, configuration, paymentController, lcdController, keysController);
-            system.Run();
+            system.Start();
             await Task.CompletedTask;
         }
     }
