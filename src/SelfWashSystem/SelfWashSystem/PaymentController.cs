@@ -9,23 +9,33 @@ namespace SelfWashSystem
 {
     public class PaymentController : IPaymentController
     {
-        private ushort _totalCoins;
+        private float _totalCoins;
 
-        public ushort GetCoins()
+        public float GetCoins()
         {
             return _totalCoins;
         }
 
-        public ushort ReadCoinsAdded()
+        public void Spend(float spentValue)
+        {
+            _totalCoins -= spentValue;
+        }
+
+        public bool ReadCoinAdded()
         {
             var key = Program.LastKey;
             if (key?.Key == ConsoleKey.C)
             {
                 _totalCoins++;
                 Program.LastKey = null;
-                return 1;
+                return true;
             }
-            return 0;
+            return false;
+        }
+
+        public void Reset()
+        {
+            _totalCoins = 0;
         }
     }
 }

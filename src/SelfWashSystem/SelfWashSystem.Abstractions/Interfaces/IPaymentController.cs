@@ -6,7 +6,9 @@ namespace SelfWashSystem.Abstractions.Interfaces
 {
     public interface IPaymentController
     {
-        ushort ReadCoinsAdded();
-        ushort GetCoins();
+        bool ReadCoinAdded();
+        float GetCoins();
+        void Spend(float spentValue);
+        void Reset();
     }
 }
