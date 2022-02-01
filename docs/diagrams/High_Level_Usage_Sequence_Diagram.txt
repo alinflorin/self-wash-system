@@ -1,0 +1,12 @@
+title High Level Usage Diagram
+
+User->Self Service Box:adds coin(s)
+Self Service Box->User:coin count updates
+User->Self Service Box:selects service
+Self Service Box->Pump:power on command
+Self Service Box->Self Service Box:starts countdown
+Self Service Box->User:displays remaining time
+User->Pump:uses
+Self Service Box->Self Service Box:timer elapses
+Self Service Box->Pump:power off command
+Self Service Box->User:reset display and coin count
