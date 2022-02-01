@@ -1,0 +1,46 @@
+title Detailed Service Box Flow Diagram
+
+Main->LcdController:display welcome and info
+User->Coin Slot:feeds coin(s)
+loop MainLoop
+    Main->PaymentController: query if coin was added
+    opt if coin was added
+        PaymentController->PaymentController:updates total count
+    end
+    PaymentController->Main:feeds total count
+    Main->LcdController:display coin count
+end
+User->Keypad:selects service
+loop MainLoop
+    Main->KeysController: query if key was pressed
+    opt if key was pressed
+        KeysController->Main:feeds pressed key
+        
+        opt if no coins
+            Main->LcdController:display insufficient funds
+        end
+        opt if enough coins
+            Main->Configuration:finds service
+            opt if valid service
+                Main->Main:selects service
+                Main->Main:calculates total time for service
+                Main->Main:selects correct pump and liquid container
+                Main->PumpController:turn on
+            end
+            opt if invalid service or stop button pressed
+                Main->Main:deselects service
+                Main->Main:resets total seconds
+                Main->PumpController:stops all pumps
+            end
+        end
+    end
+    opt if service is active
+        Main->Main:decrease timer and coins
+        Main->LcdController:update elapsed time
+        opt if timer elapsed
+            Main->Main:deselects service
+            Main->Main:resets total seconds
+            Main->PumpController:stops all pumps
+        end
+    end
+end
