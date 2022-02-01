@@ -108,11 +108,11 @@ namespace SelfWashSystem.Abstractions.Interfaces
             {
                 if (_availableSeconds > 0)
                 {
-                    _availableSeconds--;
                     _lcdController.SetText("Time left: " + TimeSpan.FromSeconds(_availableSeconds).ToString());
                     _paymentController.Spend(
                         1.0f / _selectedService.SecondsPerToken
                         );
+                    _availableSeconds--;
                 }
                 else
                 {
