@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfWashSystem", "SelfWashS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfWashSystem.Abstractions", "SelfWashSystem.Abstractions\SelfWashSystem.Abstractions.csproj", "{5177FA0A-7463-4AB5-869D-58C65E083BCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfWashSystem.Tests", "SelfWashSystem.Tests\SelfWashSystem.Tests.csproj", "{E703538F-F3D4-46A3-A170-8CD7A2D2A8DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5177FA0A-7463-4AB5-869D-58C65E083BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5177FA0A-7463-4AB5-869D-58C65E083BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5177FA0A-7463-4AB5-869D-58C65E083BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E703538F-F3D4-46A3-A170-8CD7A2D2A8DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E703538F-F3D4-46A3-A170-8CD7A2D2A8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E703538F-F3D4-46A3-A170-8CD7A2D2A8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E703538F-F3D4-46A3-A170-8CD7A2D2A8DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

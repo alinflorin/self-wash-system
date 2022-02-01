@@ -61,64 +61,69 @@ namespace SelfWashSystem.Abstractions.Interfaces
 
             while (_isRunning)
             {
-                var coinAddResult = _paymentController.ReadCoinAdded();
-                if (coinAddResult)
+                ExecuteStep();
+                Thread.Sleep(1000);
+            }
+        }
+
+        public void ExecuteStep()
+        {
+            var coinAddResult = _paymentController.ReadCoinAdded();
+            if (coinAddResult)
+            {
+                _lcdController.SetText("Coins: " + _paymentController.GetCoins());
+                return;
+            }
+            var serviceKeysResult = _keysController.GetPressedKey();
+            if (serviceKeysResult > 0)
+            {
+                // stop pumps
+                foreach (var pumpController in _pumpControllers)
                 {
-                    _lcdController.SetText("Coins: " + _paymentController.GetCoins());
-                    continue;
+                    pumpController.TurnOff();
                 }
-                var serviceKeysResult = _keysController.GetPressedKey();
-                if (serviceKeysResult > 0)
+
+                var foundService = _configuration.Services.FirstOrDefault(x => x.KeyNumber == serviceKeysResult);
+                if (foundService == null)
                 {
-                    // stop pumps
+                    _selectedService = null;
+                    _availableSeconds = 0;
+                }
+                else
+                {
+                    // service selected
+                    if (_paymentController.GetCoins() == 0)
+                    {
+                        _lcdController.SetText("Insufficient coins");
+                        return;
+                    }
+                    _selectedService = foundService;
+                    _lcdController.SetText("Selected Service: " + _selectedService.Name);
+                    _availableSeconds = (uint)Math.Ceiling(_paymentController.GetCoins() * _selectedService.SecondsPerToken);
+                    var foundPump = _pumpControllers.ElementAt(_selectedService.PumpIndex);
+                    foundPump.TurnOn(_selectedService.LiquidContainerIndex);
+                }
+            }
+            if (_selectedService != null)
+            {
+                if (_availableSeconds > 0)
+                {
+                    _availableSeconds--;
+                    _lcdController.SetText("Time left: " + TimeSpan.FromSeconds(_availableSeconds).ToString());
+                    _paymentController.Spend(
+                        1.0f / _selectedService.SecondsPerToken
+                        );
+                }
+                else
+                {
+                    // stop, time expired
                     foreach (var pumpController in _pumpControllers)
                     {
                         pumpController.TurnOff();
                     }
-
-                    var foundService = _configuration.Services.FirstOrDefault(x => x.KeyNumber == serviceKeysResult);
-                    if (foundService == null)
-                    {
-                        _selectedService = null;
-                        _availableSeconds = 0;
-                    }
-                    else
-                    {
-                        // service selected
-                        if (_paymentController.GetCoins() == 0)
-                        {
-                            _lcdController.SetText("Insufficient coins");
-                            continue;
-                        }
-                        _selectedService = foundService;
-                        _lcdController.SetText("Selected Service: " + _selectedService.Name);
-                        _availableSeconds = (uint)Math.Ceiling(_paymentController.GetCoins() * _selectedService.SecondsPerToken);
-                        var foundPump = _pumpControllers.ElementAt(_selectedService.PumpIndex);
-                        foundPump.TurnOn(_selectedService.LiquidContainerIndex);
-                    }
+                    _selectedService = null;
+                    _paymentController.Reset();
                 }
-                if (_selectedService != null)
-                {
-                    if (_availableSeconds > 0)
-                    {
-                        _availableSeconds--;
-                        _lcdController.SetText("Time left: " + TimeSpan.FromSeconds(_availableSeconds).ToString());
-                        _paymentController.Spend(
-                            1.0f / _selectedService.SecondsPerToken
-                            );
-                    }
-                    else
-                    {
-                        // stop, time expired
-                        foreach (var pumpController in _pumpControllers)
-                        {
-                            pumpController.TurnOff();
-                        }
-                        _selectedService = null;
-                        _paymentController.Reset();
-                    }
-                }
-                Thread.Sleep(1000);
             }
         }
     }
