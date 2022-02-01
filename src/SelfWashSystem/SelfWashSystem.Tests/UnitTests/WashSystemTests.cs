@@ -79,8 +79,9 @@ namespace SelfWashSystem.Tests.UnitTests
         {
             _paymentMock.Setup(x => x.ReadCoinAdded()).Returns(false);
             _paymentMock.Setup(x => x.GetCoins()).Returns(10);
+            _keysMock.Setup(x => x.GetPressedKey()).Returns(1);
+
             _testClass.ExecuteStep();
-            _keysMock.Verify(x => x.GetPressedKey(), Times.Once);
         }
     }
 }
