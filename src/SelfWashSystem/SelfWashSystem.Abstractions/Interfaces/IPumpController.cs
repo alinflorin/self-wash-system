@@ -6,7 +6,7 @@ namespace SelfWashSystem.Abstractions.Interfaces
 {
     public interface IPumpController
     {
-        void TurnOn();
+        void TurnOn(ushort liquidContainerIndex);
         void TurnOff();
     }
 }

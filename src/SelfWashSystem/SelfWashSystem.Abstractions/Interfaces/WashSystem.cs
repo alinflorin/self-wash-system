@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace SelfWashSystem.Abstractions.Interfaces
 {
-    public class System
+    public class WashSystem
     {
         private readonly IEnumerable<IPumpController> _pumpControllers;
         private readonly Configuration _configuration;
@@ -13,7 +14,7 @@ namespace SelfWashSystem.Abstractions.Interfaces
         private readonly ILcdController _lcdController;
         private readonly IKeysController _keysController;
 
-        public System(IEnumerable<IPumpController> pumpControllers, Configuration configuration,
+        public WashSystem(IEnumerable<IPumpController> pumpControllers, Configuration configuration,
             IPaymentController paymentController, ILcdController lcdController, IKeysController keysController)
         {
             _pumpControllers = pumpControllers;
@@ -21,6 +22,16 @@ namespace SelfWashSystem.Abstractions.Interfaces
             _paymentController = paymentController;
             _lcdController = lcdController;
             _keysController = keysController;
+        }
+
+        public void Run()
+        {
+            while (true)
+            {
+                var coinAddResult = _paymentController.ReadCoinsAdded();
+                var serviceKeysResult = _keysController.GetPressedKey();
+                Thread.Sleep(300);
+            }
         }
     }
 }

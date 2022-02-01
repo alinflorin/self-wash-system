@@ -11,9 +11,10 @@ namespace SelfWashSystem
     {
         public ushort GetPressedKey()
         {
-            var key = Console.ReadKey();
-            if (ushort.TryParse(key.KeyChar.ToString(), out ushort result))
+            var key = Program.LastKey;
+            if (ushort.TryParse(key?.KeyChar.ToString(), out ushort result))
             {
+                Program.LastKey = null;
                 return result;
             }
             return 0;

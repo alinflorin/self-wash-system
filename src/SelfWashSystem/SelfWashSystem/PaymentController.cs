@@ -18,10 +18,11 @@ namespace SelfWashSystem
 
         public ushort ReadCoinsAdded()
         {
-            var key = Console.ReadKey();
-            if (key.Key == ConsoleKey.C)
+            var key = Program.LastKey;
+            if (key?.Key == ConsoleKey.C)
             {
                 _totalCoins++;
+                Program.LastKey = null;
                 return 1;
             }
             return 0;
